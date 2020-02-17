@@ -25,7 +25,7 @@ SECRET_KEY = 'v(bv!6!p=r5q_p29_$l*l$c-!krab25a6*x%--m-9r*y9=pzph'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','https://tracoda.herokuapp.com/']
 
 
 # Application definition
