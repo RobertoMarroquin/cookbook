@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Donantes
+{% endblock titulo %}
+
+{% block contenido %}
+<form class="form">
+    <div class="form-group">
+        <label for="nombre">Buscar</label>
+        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="" aria-describedby="helpId">
+        <small id="helpId" class="text-muted">Escribe el nombe del donante que buscas</small>
+    </div>
+</form>
+
+<small id="helpId" class="text-muted">Mostrando {{donantes|length}} registros</small>
+
+{% for donante in donantes %}
+<h5>{{donante.nombre}}</h5>
+<
+    {% for donacion in donante.donacion_set.all %}
+
+            
+    {% endfor %}
+        
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Partido</th>
+            <th>Monto</th>
+            <th>Año</th>
+            <th>Financiamiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for donacion in donante.donacion_set.all %}
+        <tr>
+            <td>{{donacion.partido}}</td>
+            <td>{{donacion.monto}}</td>
+            <td>{{donacion.ano}}</td>
+            <td>{{donacion.financiamiento}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endfor %}
+
+{% endblock contenido %}
