@@ -5,19 +5,56 @@ Donantes
 {% endblock titulo %}
 
 {% block contenido %}
-<form class="form">
-    <div class="form-group">
-        <label for="nombre">Buscar</label>
-        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="" aria-describedby="helpId">
-        <small id="helpId" class="text-muted">Escribe el nombe del donante que buscas</small>
+
+<div class="row">
+    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"></div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="form-group">
+          <label for="tipo">Tipo de Donante</label>
+          <select class="form-control" name="tipo" id="tipo">
+            <option>Juridico</option>
+            <option>Natural</option>
+          </select>
+        </div>
     </div>
-</form>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <form class="form" id="juridico_form">
+                    <div class="form-group">
+                        <label for="nombre">Buscar</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="" aria-describedby="helpId">
+                        <small id="helpId" class="text-muted">Escriba el nombre de la empresa que busca</small>
+                    </div>
+            </form>
+
+            <form action="" method="get" id="natural_form">
+                
+                <div class="row">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div class="form-group">
+                          <label for="nombres">Nombres</label>
+                          <input type="text" name="nombres" id="nombres" class="form-control" placeholder="" aria-describedby="h2">
+                          <small id="h2" class="text-muted">Escribe los nombres del donante</small>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+</div>
+
+
 
 <small id="helpId" class="text-muted">Mostrando {{donantes|length}} registros</small>
 
 {% for donante in donantes %}
 <h5>{{donante.nombre}}</h5>
-<
+
     {% for donacion in donante.donacion_set.all %}
 
             
