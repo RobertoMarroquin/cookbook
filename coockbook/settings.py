@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'v(bv!6!p=r5q_p29_$l*l$c-!krab25a6*x%--m-9r*y9=pzph'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','https://tracoda.herokuapp.com/']
 
@@ -120,13 +120,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
 STATIC_URL = os.path.join(BASE_DIR,'/static/')
 
 STATIC_ROOT = os.path.join(BASE_DIR,'/staticfiles/')
 
+os.makedirs(STATIC_URL, exist_ok=True)
+os.makedirs(STATIC_ROOT, exist_ok=True)
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
