@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Partidos
+{% endblock titulo %}
+
+{% block contenido %}
+<form class="form">
+    <div class="form-group">
+        <label for="nombre">Buscar</label>
+        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="" aria-describedby="helpId">
+        <small id="helpId" class="text-muted">Escribe las siglas del partido que buscas</small>
+    </div>
+</form>
+
+
+
+{% endblock contenido %}
