@@ -6,48 +6,66 @@ Donantes
 
 {% block contenido %}
 
-<div class="row">
-    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"></div>
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-        <div class="form-group">
-          <label for="tipo">Tipo de Donante</label>
-          <select class="form-control" name="tipo" id="tipo">
-            <option>Juridico</option>
-            <option>Natural</option>
-          </select>
+<form action="" method="get">
+    <div class="row">
+
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+
         </div>
+
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            {% if tipo == 'Natural' %}
+            <div class="form-group">
+                <label for="nombres">Nombres</label>
+                <input type="text" class="form-control" name="nombres" id="nombres" aria-describedby="helpId1"
+                    placeholder="Juan Jose">
+                <small id="helpId1" class="form-text text-muted">Escribe los nombres de la persona que buscas</small>
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" class="form-control" name="apellidos" id="apellidos" aria-describedby="helpId2"
+                    placeholder="Perez Perez">
+                <small id="helpId2" class="form-text text-muted">Escribe os apellidos de la persona que buscas</small>
+            </div>
+            {% endif %}
+
+            {% if tipo == 'Juridica' %}
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" name="nombre" id="nombre" aria-describedby="helpId1"
+                    placeholder="Juan Jose">
+                <small id="helpId1" class="form-text text-muted">Escribe los nombres de la organizacion que
+                    buscas</small>
+            </div>
+            {% endif %}
+        </div>
+
+
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+
+        </div>
+
     </div>
-</div>
+
+    <div class="row">
+
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+
+        </div>
+
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+
+        </div>
+
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+
+        </div>
 
 
-<div class="row">
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
-    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <form class="form" id="juridico_form">
-                    <div class="form-group">
-                        <label for="nombre">Buscar</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="" aria-describedby="helpId">
-                        <small id="helpId" class="text-muted">Escriba el nombre de la empresa que busca</small>
-                    </div>
-            </form>
-
-            <form action="" method="get" id="natural_form">
-                
-                <div class="row">
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                        <div class="form-group">
-                          <label for="nombres">Nombres</label>
-                          <input type="text" name="nombres" id="nombres" class="form-control" placeholder="" aria-describedby="h2">
-                          <small id="h2" class="text-muted">Escribe los nombres del donante</small>
-                        </div>
-                    </div>
-                </div>
-                
-            </form>
     </div>
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
-</div>
 
+</form>
 
 
 <small id="helpId" class="text-muted">Mostrando {{donantes|length}} registros</small>
@@ -55,11 +73,11 @@ Donantes
 {% for donante in donantes %}
 <h5>{{donante.nombre}}</h5>
 
-    {% for donacion in donante.donacion_set.all %}
+{% for donacion in donante.donacion_set.all %}
 
-            
-    {% endfor %}
-        
+
+{% endfor %}
+
 
 
 <table class="table">

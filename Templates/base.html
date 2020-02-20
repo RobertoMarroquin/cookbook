@@ -19,9 +19,15 @@
               aria-expanded="false" aria-label="Toggle navigation"></button>
           <div class="collapse navbar-collapse" id="collapsibleNavId">
               <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'donanciones:donantes' %}">Donantes</a>
-                  </li>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Donantes
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{% url 'donaciones:donantes' %}">Naturales</a>
+                              <a class="dropdown-item" href="{% url 'donaciones:juridicos' %}">Juridicos</a>
+                            </div>
+                          </li>
                   <li class="nav-item">
                       <a class="nav-link" href="{% url 'donaciones:partidos' %}">Partidos</a>
                   </li>

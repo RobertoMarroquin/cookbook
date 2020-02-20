@@ -49,12 +49,34 @@ class DonanteListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(DonanteListView, self).get_context_data(**kwargs)
         context['donantes'] = Donante.objects.order_by('-id')[:10][::-1]
-        nombre = self.request.GET.get('nombre')
-
-        if nombre and nombre != "":
-            context['donantes'] = Donante.objects.filter(nombre__icontains=nombre)
+        nombres = self.request.GET.get('nombres')
+        apellidos = self.request.GET.get('apellidos')
+        context['tipo']='Natural'
+        if nombres and nombres != "" and apellidos and apellidos != '':
+            context['donantes'] = Donante.objects.filter(nombre__icontains=nombres).filter(nombre__icontains=apellidos).filter(tipo_persona='NATURAL')
             context['donaciones'] = Donacion.objects.filter(donante_id__in=(context['donantes']))
-            
+        else:
+            context['error'] = "Falta Informacion"
+
+        return context
+
+
+class EmpresaListView(ListView):
+    model = Donante
+    template_name = "Donaciones/lista_donantes.html"
+    context_object_name = 'donantes'
+    
+    def get_context_data(self, **kwargs):
+        context = super(EmpresaListView, self).get_context_data(**kwargs)
+        context['donantes'] = Donante.objects.filter(tipo_persona="JURIDICA").order_by('-id')[:10][::-1]
+        nombre = self.request.GET.get('nombre')
+        context['tipo']='Juridica'
+        if nombre and nombre != "":
+            context['donantes'] = Donante.objects.filter(nombre__icontains=nombre).filter(tipo_persona='JURIDICA')
+            context['donaciones'] = Donacion.objects.filter(donante_id__in=(context['donantes']))
+        else:
+            context['error'] = "Falta Informacion"
+
         return context
     
     
@@ -73,4 +95,6 @@ class PartidoListView(ListView):
             donantes = Partido.objects.filter(siglas__icontains=nombre)
             return donantes
         return last_ten
+
+
 
