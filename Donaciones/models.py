@@ -61,3 +61,25 @@ class Donacion(models.Model):
         return reverse("donacion_detail", kwargs={"pk": self.pk})
 
 
+class ListaNombres(models.Model):
+    nombre_pila = models.CharField(("Nombre de Pila"), max_length=100)
+
+    class Meta:
+
+        verbose_name = 'Lista de Nombres'
+        verbose_name_plural = 'ListaNombress'
+
+    def __str__(self):
+        return f'{self.nombre_pila}'
+    
+
+class ListaApellidos(models.Model):
+    apellido = models.CharField(("Apellido"), max_length=100)
+
+    class Meta:
+        verbose_name = 'Lista de Apellidos'
+        verbose_name_plural = 'ListaApellidoss'
+
+    def __str__(self):
+        return f'{self.apellido}' # TODO
+

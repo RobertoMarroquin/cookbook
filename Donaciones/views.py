@@ -6,7 +6,7 @@ import csv
 import os
 
 
-from .models import Donante,Donacion,Partido
+from .models import Donante,Donacion,Partido,ListaApellidos,ListaNombres
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,6 +39,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #                financiamiento  = financiamiento,
 #            )
 
+def carga_nombres():
+    with open(os.path.join(BASE_DIR,"nombres.csv")) as f:
+        documento = csv.reader(f,delimiter=',',dialect='excel')
+        documento = list(documento)
+        for linea in documento:
+            nombre = linea[0]
+            registro  = ListaNombres.objects.get_or_create(nombre_pila=nombre)
+
+
+def carga_apellidos():
+    with open(os.path.join(BASE_DIR,"apellidos.csv")) as f:
+        documento = csv.reader(f,delimiter=',',dialect='excel')
+        documento = list(documento)
+        for linea in documento:
+            apellido = linea[0]
+            registro  = ListaApellidos.objects.get_or_create(apellido=apellido)
 
 
 class DonanteListView(ListView):
@@ -98,3 +114,59 @@ class PartidoListView(ListView):
 
 
 
+def compara_antroponimos(nombre,listaNombres,listaApellidos):
+
+    nombres = list(nombre.split())
+    largo = len(nombres)
+    print(largo)
+    a1 = ""
+    a2 = ""
+    n1 = ""
+    n2 = ""
+
+    if largo == 4 :
+        if nombres[0] in listaNombres and nombres[3] in listaApellidos:
+            print("1A")
+            n1,n2,a1,a2 = nombres
+        elif nombres[0] in listaApellidos and nombres[3] in listaNombres:
+            print("1B")
+            a1,a2,n1,n2 = nombres
+        else:
+            return "No se pudo Ordenar"
+
+    elif largo == 3:
+        if nombres[1] in listaApellidos and nombres[0] in listaApellidos and nombres[2] in listaNombres:
+            print("2A")
+            a1,a2,n1 = nombres
+        elif nombres[1] in listaApellidos and nombres[0] in listaNombres and nombres[2] in listaApellidos:
+            print("2B")
+            n1,a1,a2 = nombres
+        elif nombres[1] in listaNombres and nombres[0] in listaApellidos and nombres[2] in listaApellidos:
+            print("3A")
+            a1,n1,n2 = nombres
+        elif nombres[1] in listaNombres and nombres[0] in listaNombres and nombres[2] in listaNombres:
+            print("3B")
+            n1,n2,a1 = nombres
+        else:
+            return "No se pudo Ordenar"
+
+    elif largo == 2:
+        if nombres[0] in listaNombres and nombres[1] in listaApellidos:
+            n1,a1 = nombres
+        elif nombres[0] in listaApellidos and nombres[1] in listaNombres:
+            a1,n1 = nombres
+        else:
+            return "No se pudo Ordenar"
+
+    else:
+        return "No se pudo Ordenar"
+
+    tupla = (n1,n2,a1,a2)
+    return  tupla
+
+
+
+
+
+
+    
