@@ -8,8 +8,11 @@ class Donante(models.Model):
     
     tipo_persona = models.CharField(("Tipo de Persona"), max_length=50, blank=True, null=True)
     nombre = models.CharField(("Nombre"), max_length=300,blank=True, null=True)
-    nombres = models.CharField(("Nombres"), max_length=100, blank=True, null=True)
-    apellidos = models.CharField(("Apellidos"), max_length=100,blank=True, null=True)
+    primer_nombre = models.CharField(("Primer Nombre"), max_length=100, blank=True, null=True)
+    segundo_nombre = models.CharField(("Segundo Nombre"), max_length=100, blank=True, null=True)
+    primer_apellido = models.CharField(("Primer Apellido"), max_length=100, blank=True, null=True)
+    segundo_apellido = models.CharField(("Segundo Apellido"), max_length=100, blank=True, null=True)
+
 
     # TODO: Define fields here
 
@@ -21,7 +24,10 @@ class Donante(models.Model):
 
     def __str__(self):
         """Unicode representation of Donante."""
-        return self.nombre
+        if self.nombre:
+            return f'{self.nombre}'
+        else:
+            return f'{self.primer_nombre} {self.segundo_nombre} {self.primer_apellido} {self.segundo_apellido}'
 
     def get_absolute_url(self):
             return reverse("donante_detail", kwargs={"pk": self.pk})

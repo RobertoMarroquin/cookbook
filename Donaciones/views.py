@@ -10,34 +10,53 @@ from .models import Donante,Donacion,Partido,ListaApellidos,ListaNombres
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-#def carga(archivo):
-#    with open(os.path.join(BASE_DIR,archivo)) as f:
-#        documento = csv.reader(f,delimiter=',',dialect='excel')
-#        next(documento, None)
-#        documento = list(documento)
-#        for linea in documento:
-#
-#            nombre,monto,ano,siglas,financiamiento,tipo_persona = list(linea)
-#            monto = float(monto)
-#            ano = int(ano)
-#            print(list(linea))
-#
-#            donante = Donante.objects.get_or_create(
-#                nombre = nombre,
-#                tipo_persona = tipo_persona,
-#            )
-#
-#            partido = Partido.objects.get_or_create(
-#                siglas = siglas,
-#            )
-#
-#            donacion = Donacion.objects.create(
-#                donante = donante[0],
-#                partido = partido[0],
-#                monto = float(monto),
-#                ano = int(ano),
-#                financiamiento  = financiamiento,
-#            )
+def carga():
+   with open(os.path.join(BASE_DIR,"Union2 - Base-naturales.csv")) as f:
+        documento = csv.reader(f,delimiter=',',dialect='excel')
+        next(documento, None)
+        documento = list(documento)
+        lista_nombres = list(ListaNombres.objects.all())
+        lista_apellidos = list(ListaApellidos.objects.all())
+        listaA = []
+        listaN = []
+        for apellido in lista_apellidos:
+            listaA.append(apellido.apellido)
+        
+        for nombre in lista_nombres:
+            listaN.append(nombre.nombre_pila)
+        
+        for linea in documento:
+            nombre,monto,ano,siglas,financiamiento,tipo_persona = list(linea)
+            n1,n2,a1,a2 = compara_antroponimos(nombre.upper(),listaN,listaA) if   compara_antroponimos(nombre.upper(),listaN,listaA) != "No se pudo Ordenar"     else (False,False,False,False)
+
+            monto = float(monto)
+            ano = int(ano)
+            if n1 and a1:          
+                donante = Donante.objects.get_or_create(
+                primer_nombre = n1,
+                segundo_nombre = n2,
+                primer_apellido = a1,
+                segundo_apellido = a2,
+                tipo_persona = tipo_persona,
+                )
+            else:
+                donante = Donante.objects.get_or_create(
+                    nombre = nombre,
+                    tipo_persona = tipo_persona,
+                )
+
+
+            partido = Partido.objects.get_or_create(
+               siglas = siglas,
+            )
+
+            donacion = Donacion.objects.create(
+               donante = donante[0],
+               partido = partido[0],
+               monto = float(monto),
+               ano = int(ano),
+               financiamiento  = financiamiento,
+            )
 
 def carga_nombres():
     with open(os.path.join(BASE_DIR,"nombres.csv")) as f:
@@ -126,26 +145,20 @@ def compara_antroponimos(nombre,listaNombres,listaApellidos):
 
     if largo == 4 :
         if nombres[0] in listaNombres and nombres[3] in listaApellidos:
-            print("1A")
             n1,n2,a1,a2 = nombres
         elif nombres[0] in listaApellidos and nombres[3] in listaNombres:
-            print("1B")
             a1,a2,n1,n2 = nombres
         else:
             return "No se pudo Ordenar"
 
     elif largo == 3:
         if nombres[1] in listaApellidos and nombres[0] in listaApellidos and nombres[2] in listaNombres:
-            print("2A")
             a1,a2,n1 = nombres
         elif nombres[1] in listaApellidos and nombres[0] in listaNombres and nombres[2] in listaApellidos:
-            print("2B")
             n1,a1,a2 = nombres
         elif nombres[1] in listaNombres and nombres[0] in listaApellidos and nombres[2] in listaApellidos:
-            print("3A")
             a1,n1,n2 = nombres
         elif nombres[1] in listaNombres and nombres[0] in listaNombres and nombres[2] in listaNombres:
-            print("3B")
             n1,n2,a1 = nombres
         else:
             return "No se pudo Ordenar"
