@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import Donacion,Donante,Partido,ListaNombres,ListaApellidos
 
 class DonanteAdmin(admin.ModelAdmin):
+    search_fields = ('nombre',)
+
     list_display = ('nombre','primer_nombre','segundo_nombre','primer_apellido','segundo_apellido')
 
 admin.site.register(Donante, DonanteAdmin)

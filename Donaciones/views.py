@@ -27,12 +27,15 @@ def carga():
         
         for linea in documento:
             nombre,monto,ano,siglas,financiamiento,tipo_persona = list(linea)
-            n1,n2,a1,a2 = compara_antroponimos(nombre.upper(),listaN,listaA) if   compara_antroponimos(nombre.upper(),listaN,listaA) != "No se pudo Ordenar"     else (False,False,False,False)
-
+            nombre = nombre.upper()
+            n1,n2,a1,a2 = compara_antroponimos(nombre,listaN,listaA) if   compara_antroponimos(nombre.upper(),listaN,listaA) != "No se pudo Ordenar"     else (False,False,False,False)
+            nombre_compuesto = f'{n1} {n2} {a1} {a2}'.strip().replace("  "," ")
             monto = float(monto)
             ano = int(ano)
+
             if n1 and a1:          
                 donante = Donante.objects.get_or_create(
+                nombre =nombre_compuesto,
                 primer_nombre = n1,
                 segundo_nombre = n2,
                 primer_apellido = a1,
@@ -135,9 +138,9 @@ class PartidoListView(ListView):
 
 def compara_antroponimos(nombre,listaNombres,listaApellidos):
 
+    nombre = nombre.upper()
     nombres = list(nombre.split())
     largo = len(nombres)
-    print(largo)
     a1 = ""
     a2 = ""
     n1 = ""
