@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block titulo %}
 Donantes
 {% endblock titulo %}
@@ -91,7 +91,7 @@ Donantes
         {% for donacion in donante.donacion_set.all %}
         <tr>
             <td>{{donacion.partido}}</td>
-            <td>{{donacion.monto}}</td>
+            <td>{{donacion.monto|intcomma}}</td>
             <td>{{donacion.ano}}</td>
             <td>{{donacion.financiamiento}}</td>
         </tr>

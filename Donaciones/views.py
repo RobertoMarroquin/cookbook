@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import DeleteView,ListView,CreateView,DeleteView,View
+from django.db.models import Sum
 
 
 import csv
@@ -124,6 +125,13 @@ class PartidoListView(ListView):
     model = Partido
     template_name = "Donaciones/lista_partido.html"
     context_object_name = 'partidos'
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(PartidoListView, self).get_context_data(**kwargs)
+        context["donaciones"] = Donacion.objects.all().values("partido","ano").annotate(monto_anual=Sum("monto"))
+        return context
+    
 
     def get_queryset(self):
         nombre = self.request.GET.get('nombre')

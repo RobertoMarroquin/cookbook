@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block titulo %}
 Partidos
 {% endblock titulo %}
@@ -12,5 +12,30 @@ Partidos
         <small id="helpId" class="text-muted">Escribe las siglas del partido que buscas</small>
     </div>
 </form>
+
+{% for partido in partidos %}
+<h5>{{partido.siglas}}</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Monto</th>
+            <th>Año</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for donacion in donaciones %}
+        {% if donacion.partido == partido.id %}
+        <tr>
+            <td>{{donacion.ano}}</td>
+            <td>{{donacion.monto_anual|floatformat:2|intcomma}}</td>
+        </tr>
+        {% else %}
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endfor %}
 
 {% endblock contenido %}
