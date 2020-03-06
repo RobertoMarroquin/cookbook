@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import DeleteView,ListView,CreateView,DeleteView
+from django.views.generic import DeleteView,ListView,CreateView,DeleteView,View
 
 
 import csv
@@ -181,7 +181,13 @@ def compara_antroponimos(nombre,listaNombres,listaApellidos):
     return  tupla
 
 
+class CargaView(View):
+    def get(self, request, *args, **kwargs):
 
+        return render(request,"Donaciones/carga.html",context={})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse('POST request!')    
 
 
 
