@@ -135,7 +135,7 @@ class PartidoListView(ListView):
 
     def get_queryset(self):
         nombre = self.request.GET.get('nombre')
-        last_ten = Partido.objects.order_by('-id')
+        last_ten = Partido.objects.all().order_by('-id')
 
         if nombre:
             donantes = Partido.objects.filter(siglas__icontains=nombre)
