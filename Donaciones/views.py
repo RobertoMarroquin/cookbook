@@ -30,11 +30,11 @@ def carga():
             nombre,monto,ano,siglas,financiamiento,tipo_persona = list(linea)
             n1,a1 = False, False
             if tipo_persona in ("NATURAL","NATURALES"):
-                n1,n2,a1,a2 = compara_antroponimos(nombre,listaN,listaA) if   compara_antroponimos(nombre,listaN,listaA) != "No se pudo Ordenar" else (False,False,False,False)
                 tipo_persona = "NATURAL"
+                n1,n2,a1,a2 = compara_antroponimos(nombre,listaN,listaA) if   compara_antroponimos(nombre,listaN,listaA) != "No se pudo Ordenar" else (False,False,False,False)  
             if tipo_persona in ("JURIDICA", "JURÍDICA", "JURÍDICO", "JURIDICO"):
                 tipo_persona = "JURIDICA"
-            if tipo_persona in ("INDETERMINADO","INDETERMINADA")
+            if tipo_persona in ("INDETERMINADO","INDETERMINADA"):
                 tipo_persona = "INDETERMINADO"
             monto = float(monto)
             ano = int(ano)
