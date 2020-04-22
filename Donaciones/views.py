@@ -28,13 +28,19 @@ def carga():
         
         for linea in documento:
             nombre,monto,ano,siglas,financiamiento,tipo_persona = list(linea)
-            nombre = nombre.upper()
-            n1,n2,a1,a2 = compara_antroponimos(nombre,listaN,listaA) if   compara_antroponimos(nombre.upper(),listaN,listaA) != "No se pudo Ordenar"     else (False,False,False,False)
-            nombre_compuesto = f'{n1} {n2} {a1} {a2}'.strip().replace("  "," ")
+            n1,a1 = False, False
+            if tipo_persona in ("NATURAL","NATURALES"):
+                n1,n2,a1,a2 = compara_antroponimos(nombre,listaN,listaA) if   compara_antroponimos(nombre,listaN,listaA) != "No se pudo Ordenar" else (False,False,False,False)
+                tipo_persona = "NATURAL"
+            if tipo_persona in ("JURIDICA", "JURÍDICA", "JURÍDICO", "JURIDICO"):
+                tipo_persona = "JURIDICA"
+            if tipo_persona in ("INDETERMINADO","INDETERMINADA")
+                tipo_persona = "INDETERMINADO"
             monto = float(monto)
             ano = int(ano)
-
-            if n1 and a1:          
+            
+            if n1 and a1:
+                nombre_compuesto = f'{n1} {n2} {a1} {a2}'.strip().replace("  "," ")          
                 donante = Donante.objects.get_or_create(
                 nombre =nombre_compuesto,
                 primer_nombre = n1,
@@ -146,30 +152,38 @@ class PartidoListView(ListView):
 
 def compara_antroponimos(nombre,listaNombres,listaApellidos):
 
-    nombre = nombre.upper()
+    nombre = " " + nombre.upper()
+
+    nombre = nombre.replace("  "," ")
+    nombre = nombre.replace(" DE "," DE_")
+    nombre = nombre.replace(" LA "," LA_") 
+    nombre = nombre.replace(" DEL "," DEL_")
+    nombre = nombre.replace(",","")
+    nombre = nombre.strip()
+
     nombres = list(nombre.split())
     largo = len(nombres)
     a1 = ""
     a2 = ""
     n1 = ""
-    n2 = ""
+    n2 = ""        
 
     if largo == 4 :
-        if nombres[0] in listaNombres and nombres[3] in listaApellidos:
+        if nombres[0] in listaNombres and nombres[1] in listaNombres and nombres[2] in listaApellidos and nombres[3] in listaApellidos:
             n1,n2,a1,a2 = nombres
-        elif nombres[0] in listaApellidos and nombres[3] in listaNombres:
+        elif nombres[0] in listaApellidos and nombres[1] in listaApellidos  and nombres[2] in listaNombres and nombres[3] in listaNombres:
             a1,a2,n1,n2 = nombres
         else:
             return "No se pudo Ordenar"
 
     elif largo == 3:
-        if nombres[1] in listaApellidos and nombres[0] in listaApellidos and nombres[2] in listaNombres:
+        if nombres[0] in listaApellidos and nombres[1] in listaApellidos and nombres[2] in listaNombres:
             a1,a2,n1 = nombres
-        elif nombres[1] in listaApellidos and nombres[0] in listaNombres and nombres[2] in listaApellidos:
-            n1,a1,a2 = nombres
-        elif nombres[1] in listaNombres and nombres[0] in listaApellidos and nombres[2] in listaApellidos:
+        elif nombres[0] in listaApellidos and nombres[1] in listaNombres and nombres[2] in listaNombres:
             a1,n1,n2 = nombres
-        elif nombres[1] in listaNombres and nombres[0] in listaNombres and nombres[2] in listaNombres:
+        elif nombres[0] in listaNombres and nombres[1] in listaApellidos and nombres[2] in listaApellidos:
+            n1,a1,a2 = nombres
+        elif nombres[0] in listaNombres and nombres[1] in listaNombres and nombres[2] in listaApellidos:
             n1,n2,a1 = nombres
         else:
             return "No se pudo Ordenar"
@@ -196,6 +210,25 @@ class CargaView(View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponse('POST request!')    
+
+
+def reemplazo_espacios():
+    listaN = ListaNombres.objects.filter(nombre_pila__icontains="de ") | ListaNombres.objects.filter(nombre_pila__icontains="del ") | ListaNombres.objects.filter(nombre_pila__icontains="la ")
+    listaA = ListaApellidos.objects.filter(apellido__icontains="de ") | ListaApellidos.objects.filter(apellido__icontains="del ") | ListaApellidos.objects.filter(apellido__icontains="la ")
+
+    for n in listaN:
+        n.nombre_pila = n.nombre_pila.replace("  "," ")
+        n.nombre_pila = n.nombre_pila.replace("DE ","DE_")
+        n.nombre_pila = n.nombre_pila.replace("DE ","DE_")
+        n.nombre_pila = n.nombre_pila.replace("DE ","DE_")
+        n.save()
+
+    for a in listaA:
+        a.apellido = a.apellido.replace("  "," ") 
+        a.apellido = a.apellido.replace("DE ","DE_") 
+        a.apellido = a.apellido.replace("DEL ","DEL_") 
+        a.apellido = a.apellido.replace("LA ","LA_") 
+        a.save()
 
 
 
