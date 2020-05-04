@@ -1,18 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import DeleteView,ListView,CreateView,DeleteView,View
 from django.db.models import Sum
+from django.urls import reverse,reverse_lazy
 
 
 import csv
 import os
 
 
-from .models import Donante,Donacion,Partido,ListaApellidos,ListaNombres
+from .models import Donante,Donacion,Partido,ListaApellidos,ListaNombres,ArchivoCarga
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def carga():
-   with open(os.path.join(BASE_DIR,"Union2 - Base-naturales.csv")) as f:
+def carga(archivo):
+   with open(os.path.join(BASE_DIR,archivo.archivo.name),encoding="utf8") as f:
         documento = csv.reader(f,delimiter=',',dialect='excel')
         next(documento, None)
         documento = list(documento)
@@ -66,6 +67,7 @@ def carga():
                monto = float(monto),
                ano = int(ano),
                financiamiento  = financiamiento,
+               carga=archivo
             )
 
 def carga_nombres():
@@ -93,7 +95,7 @@ class DonanteListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(DonanteListView, self).get_context_data(**kwargs)
-        context['donantes'] = Donante.objects.order_by('-id')[:10][::-1]
+        context['donantes'] = Donante.objects.filter(tipo_persona='NATURAL').order_by('-id')[:10][::-1]
         nombres = self.request.GET.get('nombres')
         apellidos = self.request.GET.get('apellidos')
         context['tipo']='Natural'
@@ -205,12 +207,17 @@ def compara_antroponimos(nombre,listaNombres,listaApellidos):
 
 class CargaView(View):
     def get(self, request, *args, **kwargs):
-
-        return render(request,"Donaciones/carga.html",context={})
+        cargas = ArchivoCarga.objects.all()
+        return render(request,"Donaciones/carga.html",context={"cargas":cargas})
 
     def post(self, request, *args, **kwargs):
-        return HttpResponse('POST request!')    
+        cargas = ArchivoCarga.objects.all()
+        archivo = ArchivoCarga(archivo=request.FILES['archivo'])
+        archivo.save()
+        carga(archivo)
 
+        return render(request,"Donaciones/carga.html",context={"cargas":cargas})
+    
 
 def reemplazo_espacios():
     listaN = ListaNombres.objects.filter(nombre_pila__icontains="de ") | ListaNombres.objects.filter(nombre_pila__icontains="del ") | ListaNombres.objects.filter(nombre_pila__icontains="la ")
@@ -231,5 +238,8 @@ def reemplazo_espacios():
         a.save()
 
 
+class ArchivoCargaDeleteView(DeleteView):
+    model = ArchivoCarga
+    template_name = "Donaciones/delete.html"
 
-    
+    success_url = reverse_lazy('donaciones:carga')

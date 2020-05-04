@@ -4,6 +4,20 @@ from django.urls import reverse
 
 # Create your models here.
 
+class ArchivoCarga(models.Model):
+    """Model definition for ArchivoCarga."""
+    archivo = models.FileField(("Archivo"), upload_to="static/cargas/", max_length=200)
+    fecha = models.DateTimeField(("Fecha de carga"), auto_now=False, auto_now_add=True)
+
+    class Meta:
+
+        verbose_name = 'Archivo de Carga'
+        verbose_name_plural = 'Archivos de Carga'
+
+    def __str__(self):
+        return self.archivo.name
+
+
 class Donante(models.Model):
     
     tipo_persona = models.CharField(("Tipo de Persona"), max_length=50, blank=True, null=True)
@@ -55,6 +69,7 @@ class Donacion(models.Model):
     partido = models.ForeignKey('Donaciones.Partido', on_delete=models.CASCADE,blank=True, null=True)
     ano = models.IntegerField(("Año"),blank=True, null=True)
     financiamiento = models.CharField(("Financiamiento"), max_length=50,blank=True, null=True)
+    carga = models.ForeignKey("Donaciones.ArchivoCarga", verbose_name=("Id_Carga"), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = ("donacion")
@@ -81,7 +96,6 @@ class ListaNombres(models.Model):
 
 class ListaApellidos(models.Model):
     apellido = models.CharField(("Apellido"), max_length=100)
-
     class Meta:
         verbose_name = 'Lista de Apellidos'
         verbose_name_plural = 'ListaApellidoss'

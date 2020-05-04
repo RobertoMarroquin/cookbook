@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <h5>Estas a punto de eliminar la carga {{object.archivo.name}} subida el {{object.fecha}}, Se eliminaran todas las donaciones del archivo ¿Estas seguro de hacerlo?</h5>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+    <p>
+        <button type="submit" class="btn btn-primary">Si</button> 
+        <a name="" id="" class="btn btn-primary" href="{% url 'donaciones:carga' %}" role="button">No</a>
+    </p>    
+    </div>
+  </form>
+{% endblock contenido %}

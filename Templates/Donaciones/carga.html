@@ -7,17 +7,18 @@
     </div>
     
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-        <form action="" method="get">
+        <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
             <label for="banner">Archivo:</label>
             <div class="input-group">
 
                 <label class="input-group-btn">
                     <span class="btn btn-primary btn-file">
-                        Seleccionar <input accept=".csv" class="sr-only"  name="banner" type="file" id="banner">
+                        Seleccionar <input accept=".csv" class="sr-only"  name="archivo" type="file" id="banner">
                     </span>
                 </label>
-
                 <input class="form-control" id="banner_captura" readonly="readonly" name="banner_captura" type="text" value="">
+                <button type="submit" class="btn btn-primary">Cargar</button>
             </div>
         </form>
     </div>
@@ -26,6 +27,28 @@
 
     </div>
 </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Archivo</th>
+            <th>Fecha</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if cargas|length > 0%}
+        {% for carga in cargas %}
+        <tr>
+            <td>{{carga.archivo.name}}</td>
+            <td>{{carga.fecha}}</td>
+            <td><a name="" id="" class="btn btn-primary" href="{% url 'donaciones:eliminar' carga.pk %}" role="button">Eliminar</a></td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    
+    </tbody>
+</table>
   
 {% endblock contenido %}
 
@@ -46,7 +69,8 @@
         });
     });
 </script>
-{% endblock scripts %}<script>
+{% endblock scripts %}
+<script>
     $(document).on('change','.btn-file :file',function(){
         var input = $(this);
         var numFiles = input.get(0).files ? input.get(0).files.length : 1;
