@@ -30,7 +30,7 @@ typed-ast==1.4.0
 typing==3.7.4.1
 typing-extensions==3.7.4
 unicorn==1.0.1
-urllib3==1.25.7
+urllib3==1.25.8
 virtualenv==16.7.5
 wcwidth==0.1.7
 whitenoise==5.0.1
